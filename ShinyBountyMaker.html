@@ -1,0 +1,868 @@
+<style>
+canvas {  
+  background-color: ivory;
+  border: 1px solid lightgray;
+}
+</style>
+<div>
+<label> Title Text </label>
+<input type="text" id="TitleText">
+<label> Title Font Size </label>
+<input type="number" id="TitleFontSize" min="35" max="52">
+<label> Bounty Amount </label>
+<input type="text" id="BountyAmount">
+<label> Background </label>
+<select id="Background" onchange="changeBackground()">
+<option value="0">No background</option>
+<option value="1">Cracked ground background</option>
+<option value="2">Snow background</option>
+<option value="3">Ground pebbles background</option>
+<option value="4">Grass background</option>
+<option value="5">Water background</option>
+<option value="6">Field background</option>
+<option value="7">Ice background</option>
+<option value="8">Desert background</option>
+<option value="9">Marsh background</option>
+<option value="10">Cave background</option>
+</select>
+<label> Pokemon Amount </label>
+<select id="PokemonAmount" onchange="changePokemonAmount()">
+<option value="1"> 1 </option>
+<option value="2"> 2 </option>
+<option value="3"> 3 </option>
+<option value="4"> 4 </option>
+<option value="5"> 5 </option>
+<option value="6"> 6 </option>
+</select>
+<button onclick="drawImage()">Draw PNG
+</button>
+</div>
+<label> Description </label>
+<input type="text" id="DescriptionText">
+<label> Description Font Size </label>
+<input type="number" id="DescriptionFontSize" min="16" max="28">
+<label> Description 2</label>
+<input type="text" id="DescriptionText2">
+<label> Description 2 Font Size </label>
+<input type="number" id="DescriptionFontSize2" min="16" max="28">
+<label> Description 3</label>
+<input type="text" id="DescriptionText3">
+<label> Description 3 Font Size </label>
+<input type="number" id="DescriptionFontSize3" min="16" max="28">
+</div>
+<div>
+<span id="PokemonSelectors"></span>
+</div>
+<canvas id="canvas" width="505" height="722"></canvas>
+
+<script>
+
+var Pokemon = ["https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_001.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_002.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_003_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_004.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_005.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_006.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_007.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_008.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_009.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_010.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_011.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_012_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_013.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_014.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_015.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_016.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_017.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_018.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_019_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_020_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_021.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_022.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_023.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_024.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_025_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_026_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_027.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_028.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_029.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_030.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_031.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_032.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_033.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_034.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_035.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_036.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_037.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_038.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_039.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_040.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_041_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_042_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_043.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_044_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_045_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_046.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_047.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_048.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_049.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_050.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_051.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_052.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_053.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_054.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_055.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_056.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_057.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_058.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_059.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_060.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_061.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_062.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_063.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_064_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_065_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_066.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_067.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_068.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_069.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_070.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_071.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_072.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_073.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_074.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_075.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_076.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_077.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_078.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_079.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_080.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_081.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_082.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_083.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_084_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_085_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_086.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_087.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_088.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_089.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_090.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_091.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_092.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_093.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_094.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_095.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_096.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_097_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_098.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_099.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_100.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_101.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_102.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_103.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_104.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_105.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_106.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_107.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_108.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_109.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_110.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_111_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_112_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_113.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_114.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_115.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_116.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_117.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_118_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_119_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_120.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_121.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_122.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_123_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_124.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_125.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_126.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_127.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_128.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_129_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_130_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_131.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_132.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_133.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_134.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_135.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_136.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_137.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_138.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_139.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_140.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_141.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_142.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_143.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_144.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_145.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_146.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_147.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_148.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_149.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_150.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_151.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_152.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_153.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_154_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_155.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_156.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_157.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_158.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_159.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_160.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_161.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_162.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_163.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_164.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_165_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_166_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_167.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_168.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_169.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_170.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_171.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_172.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_173.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_174.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_175.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_176.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_177.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_178_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_179.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_180.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_181.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_182.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_183.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_184.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_185_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_186_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_187.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_188.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_189.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_190_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_191.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_192.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_193.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_194_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_195_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_196.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_197.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_198_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_199.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_200.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_201-f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_202_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_203_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_204.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_205.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_206.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_207_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_208_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_209.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_210.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_211.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_212_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_213.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_214_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_215_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_216.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_217_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_218.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_219.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_220.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_221_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_222.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_223.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_224_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_225.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_226.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_227.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_228.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_229_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_230.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_231.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_232_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_233.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_234.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_235.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_236.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_237.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_238.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_239.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_240.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_241.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_242.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_243.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_244.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_245.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_246.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_247.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_248.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_249.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_250.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_251.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_252.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_253.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_254.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_255.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_256_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_257_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_258.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_259.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_260.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_261.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_262.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_263.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_264.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_265.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_266.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_267_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_268.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_269_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_270.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_271.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_272_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_273.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_274_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_275_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_276.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_277.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_278.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_279.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_280.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_281.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_282.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_283.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_284.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_285.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_286.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_287.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_288.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_289.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_290.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_291.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_292.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_293.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_294.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_295.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_296.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_297.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_298.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_299.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_300.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_301.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_302.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_303.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_304.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_305.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_306.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_307_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_308_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_309.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_310.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_311.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_312.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_313.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_314.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_315_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_316_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_317_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_318.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_319.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_320.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_321.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_322_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_323_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_324.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_325.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_326.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_327.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_328.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_329.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_330.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_331.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_332_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_333.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_334.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_335.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_336.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_337.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_338.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_339.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_340.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_341.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_342.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_343.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_344.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_345.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_346.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_347.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_348.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_349.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_350_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_351.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_352.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_353.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_354.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_355.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_356.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_357.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_358.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_359.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_360.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_361.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_362.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_363.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_364.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_365.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_366.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_367.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_368.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_369_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_370.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_371.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_372.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_373.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_374.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_375.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_376.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_377.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_378.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_379.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_380.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_381.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_382.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_383.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_384.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_385.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_386.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_387.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_388.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_389.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_390.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_391.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_392.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_393.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_394.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_395.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_396_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_397_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_398_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_399_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_400_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_401_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_402_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_403_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_404_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_405_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_406.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_407_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_408.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_409.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_410.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_411.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_412.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_413.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_414.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_415_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_416.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_417_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_418.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_419.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_420.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_421.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_422.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_423.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_424_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_425.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_426.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_427.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_428.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_429.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_430.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_431.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_432.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_433.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_434.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_435.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_436.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_437.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_438.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_439.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_440.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_441.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_442.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_443_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_444_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_445_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_446.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_447.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_448.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_449_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_450_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_451.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_452.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_453.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_454_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_455.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_456_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_457_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_458.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_459_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_460_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_461_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_462.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_463.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_464_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_465_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_466.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_467.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_468.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_469.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_470.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_471.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_472.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_473_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_474.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_475.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_476.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_477.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_478.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_479.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_480.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_481.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_482.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_483.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_484.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_485.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_486.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_487.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_488.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_489.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_490.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_491.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_492.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_493.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_494.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_495.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_496.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_497.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_498.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_499.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_500.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_501.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_502.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_503.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_504.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_505.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_506.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_507.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_508.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_509.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_510.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_511.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_512.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_513.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_514.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_515.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_516.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_517.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_518.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_519.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_520.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_521_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_522.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_523.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_524.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_525.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_526.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_527.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_528.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_529.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_530.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_531.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_532.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_533.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_534.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_535.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_536.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_537.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_538.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_539.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_540.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_541.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_542.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_543.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_544.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_545.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_546.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_547.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_548.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_549.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_550.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_551.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_552.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_553.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_554.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_555.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_556.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_557.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_558.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_559.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_560.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_561.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_562.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_563.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_564.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_565.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_566.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_567.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_568.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_569.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_570.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_571.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_572.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_573.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_574.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_575.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_576.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_577.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_578.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_579.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_570.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_581.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_582.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_583.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_584.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_585.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_586.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_587.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_588.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_589.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_580.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_591.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_592_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_593_f.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_594.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_595.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_596.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_597.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_598.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_599.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_590.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_601.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_602.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_603.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_604.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_605.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_606.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_607.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_608.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_609.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_610.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_611.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_612.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_613.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_614.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_615.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_616.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_617.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_618.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_619.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_620.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_621.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_622.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_623.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_624.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_625.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_626.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_627.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_628.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_629.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_630.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_631.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_632.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_633.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_634.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_635.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_636.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_637.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_638.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_639.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_640.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_641.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_642.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_643.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_644.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_645.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_646.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_647-ordinary.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_648-aria.png",
+"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_649.png",
+];
+var pokemonAmount = 1;
+refreshAmountOnPage();
+function refreshAmountOnPage(){
+	document.getElementById('PokemonSelectors').innerHTML = "";	
+	var AmountIndex = 0;
+	for (let i = 0; i < pokemonAmount; i++) {
+		AmountIndex = AmountIndex + 1;
+        document.getElementById('PokemonSelectors').innerHTML += "<label> Pokemon " + AmountIndex + "</label> <select id='Pokemon" + AmountIndex + "' onchange='changePokemon()'> <option value='0'>Bulbasaur</option> <option value='1'>Ivysaur</option> <option value='2'>Venusaur</option> <option value='3'>Charmander</option> <option value='4'>Charmeleon</option> <option value='5'>Charizard</option> <option value='6'>Squirtle</option> <option value='7'>Wartortle</option> <option value='8'>Blastoise</option> <option value='9'>Caterpie</option> <option value='10'>Metapod</option> <option value='11'>Butterfree</option> <option value='12'>Weedle</option> <option value='13'>Kakuna</option> <option value='14'>Beedrill</option> <option value='15'>Pidgey</option> <option value='16'>Pidgeotto</option> <option value='17'>Pidgeot</option> <option value='18'>Rattata</option> <option value='19'>Raticate</option> <option value='20'>Spearow</option> <option value='21'>Fearow</option> <option value='22'>Ekans</option> <option value='23'>Arbok</option> <option value='24'>Pikachu</option> <option value='25'>Raichu</option> <option value='26'>Sandshrew</option> <option value='27'>Sandslash</option> <option value='28'>Nidoran(F)</option> <option value='29'>Nidorina</option> <option value='30'>Nidoqueen</option> <option value='31'>Nidoran(M)</option> <option value='32'>Nidorino</option> <option value='33'>Nidoking</option> <option value='34'>Clefairy</option> <option value='35'>Clefable</option> <option value='36'>Vulpix</option> <option value='37'>Ninetales</option> <option value='38'>Jigglypuff</option> <option value='39'>Wigglytuff</option> <option value='40'>Zubat</option> <option value='41'>Golbat</option> <option value='42'>Oddish</option> <option value='43'>Gloom</option> <option value='44'>Vileplume</option> <option value='45'>Paras</option> <option value='46'>Parasect</option> <option value='47'>Venonat</option> <option value='48'>Venomoth</option> <option value='49'>Diglett</option> <option value='50'>Dugtrio</option> <option value='51'>Meowth</option> <option value='52'>Persian</option> <option value='53'>Psyduck</option> <option value='54'>Golduck</option> <option value='55'>Mankey</option> <option value='56'>Primeape</option> <option value='57'>Growlithe</option> <option value='58'>Arcanine</option> <option value='59'>Poliwag</option> <option value='60'>Poliwhirl</option> <option value='61'>Poliwrath</option> <option value='62'>Abra</option> <option value='63'>Kadabra</option> <option value='64'>Alakazam</option> <option value='65'>Machop</option> <option value='66'>Machoke</option> <option value='67'>Machamp</option> <option value='68'>Bellsprout</option> <option value='69'>Weepinbell</option> <option value='70'>Victreebel</option> <option value='71'>Tentacool</option> <option value='72'>Tentacruel</option> <option value='73'>Geodude</option> <option value='74'>Graveler</option> <option value='75'>Golem</option> <option value='76'>Ponyta</option> <option value='77'>Rapidash</option> <option value='78'>Slowpoke</option> <option value='79'>Slowbro</option> <option value='80'>Magnemite</option> <option value='81'>Magneton</option> <option value='82'>Farfetch’d</option> <option value='83'>Doduo</option> <option value='84'>Dodrio</option> <option value='85'>Seel</option> <option value='86'>Dewgong</option> <option value='87'>Grimer</option> <option value='88'>Muk</option> <option value='89'>Shellder</option> <option value='90'>Cloyster</option> <option value='91'>Gastly</option> <option value='92'>Haunter</option> <option value='93'>Gengar</option> <option value='94'>Onix</option> <option value='95'>Drowzee</option> <option value='96'>Hypno</option> <option value='97'>Krabby</option> <option value='98'>Kingler</option> <option value='99'>Voltorb</option> <option value='100'>Electrode</option> <option value='101'>Exeggcute</option> <option value='102'>Exeggutor</option> <option value='103'>Cubone</option> <option value='104'>Marowak</option> <option value='105'>Hitmonlee</option> <option value='106'>Hitmonchan</option> <option value='107'>Lickitung</option> <option value='108'>Koffing</option> <option value='109'>Weezing</option> <option value='110'>Rhyhorn</option> <option value='111'>Rhydon</option> <option value='112'>Chansey</option> <option value='113'>Tangela</option> <option value='114'>Kangaskhan</option> <option value='115'>Horsea</option> <option value='116'>Seadra</option> <option value='117'>Goldeen</option> <option value='118'>Seaking</option> <option value='119'>Staryu</option> <option value='120'>Starmie</option> <option value='121'>Mr. Mime</option> <option value='122'>Scyther</option> <option value='123'>Jynx</option> <option value='124'>Electabuzz</option> <option value='125'>Magmar</option> <option value='126'>Pinsir</option> <option value='127'>Tauros</option> <option value='128'>Magikarp</option> <option value='129'>Gyarados</option> <option value='130'>Lapras</option> <option value='131'>Ditto</option> <option value='132'>Eevee</option> <option value='133'>Vaporeon</option> <option value='134'>Jolteon</option> <option value='135'>Flareon</option> <option value='136'>Porygon</option> <option value='137'>Omanyte</option> <option value='138'>Omastar</option> <option value='139'>Kabuto</option> <option value='140'>Kabutops</option> <option value='141'>Aerodactyl</option> <option value='142'>Snorlax</option> <option value='143'>Articuno</option> <option value='144'>Zapdos</option> <option value='145'>Moltres</option> <option value='146'>Dratini</option> <option value='147'>Dragonair</option> <option value='148'>Dragonite</option> <option value='149'>Mewtwo</option> <option value='150'>Mew</option> <option value='151'>Chikorita</option> <option value='152'>Bayleef</option> <option value='153'>Meganium</option> <option value='154'>Cyndaquil</option> <option value='155'>Quilava</option> <option value='156'>Typhlosion</option> <option value='157'>Totodile</option> <option value='158'>Croconaw</option> <option value='159'>Feraligatr</option> <option value='160'>Sentret</option> <option value='161'>Furret</option> <option value='162'>Hoothoot</option> <option value='163'>Noctowl</option> <option value='164'>Ledyba</option> <option value='165'>Ledian</option> <option value='166'>Spinarak</option> <option value='167'>Ariados</option> <option value='168'>Crobat</option> <option value='169'>Chinchou</option> <option value='170'>Lanturn</option> <option value='171'>Pichu</option> <option value='172'>Cleffa</option> <option value='173'>Igglybuff</option> <option value='174'>Togepi</option> <option value='175'>Togetic</option> <option value='176'>Natu</option> <option value='177'>Xatu</option> <option value='178'>Mareep</option> <option value='179'>Flaaffy</option> <option value='180'>Ampharos</option> <option value='181'>Bellossom</option> <option value='182'>Marill</option> <option value='183'>Azumarill</option> <option value='184'>Sudowoodo</option> <option value='185'>Politoed</option> <option value='186'>Hoppip</option> <option value='187'>Skiploom</option> <option value='188'>Jumpluff</option> <option value='189'>Aipom</option> <option value='190'>Sunkern</option> <option value='191'>Sunflora</option> <option value='192'>Yanma</option> <option value='193'>Wooper</option> <option value='194'>Quagsire</option> <option value='195'>Espeon</option> <option value='196'>Umbreon</option> <option value='197'>Murkrow</option> <option value='198'>Slowking</option> <option value='199'>Misdreavus</option> <option value='200'>Unown</option> <option value='201'>Wobbuffet</option> <option value='202'>Girafarig</option> <option value='203'>Pineco</option> <option value='204'>Forretress</option> <option value='205'>Dunsparce</option> <option value='206'>Gligar</option> <option value='207'>Steelix</option> <option value='208'>Snubbull</option> <option value='209'>Granbull</option> <option value='210'>Qwilfish</option> <option value='211'>Scizor</option> <option value='212'>Shuckle</option> <option value='213'>Heracross</option> <option value='214'>Sneasel</option> <option value='215'>Teddiursa</option> <option value='216'>Ursaring</option> <option value='217'>Slugma</option> <option value='218'>Magcargo</option> <option value='219'>Swinub</option> <option value='220'>Piloswine</option> <option value='221'>Corsola</option> <option value='222'>Remoraid</option> <option value='223'>Octillery</option> <option value='224'>Delibird</option> <option value='225'>Mantine</option> <option value='226'>Skarmory</option> <option value='227'>Houndour</option> <option value='228'>Houndoom</option> <option value='229'>Kingdra</option> <option value='230'>Phanpy</option> <option value='231'>Donphan</option> <option value='232'>Porygon2</option> <option value='233'>Stantler</option> <option value='234'>Smeargle</option> <option value='235'>Tyrogue</option> <option value='236'>Hitmontop</option> <option value='237'>Smoochum</option> <option value='238'>Elekid</option> <option value='239'>Magby</option> <option value='240'>Miltank</option> <option value='241'>Blissey</option> <option value='242'>Raikou</option> <option value='243'>Entei</option> <option value='244'>Suicune</option> <option value='245'>Larvitar</option> <option value='246'>Pupitar</option> <option value='247'>Tyranitar</option> <option value='248'>Lugia</option> <option value='249'>Ho-Oh</option> <option value='250'>Celebi</option> <option value='251'>Treecko</option> <option value='252'>Grovyle</option> <option value='253'>Sceptile</option> <option value='254'>Torchic</option> <option value='255'>Combusken</option> <option value='256'>Blaziken</option> <option value='257'>Mudkip</option> <option value='258'>Marshtomp</option> <option value='259'>Swampert</option> <option value='260'>Poochyena</option> <option value='261'>Mightyena</option> <option value='262'>Zigzagoon</option> <option value='263'>Linoone</option> <option value='264'>Wurmple</option> <option value='265'>Silcoon</option> <option value='266'>Beautifly</option> <option value='267'>Cascoon</option> <option value='268'>Dustox</option> <option value='269'>Lotad</option> <option value='270'>Lombre</option> <option value='271'>Ludicolo</option> <option value='272'>Seedot</option> <option value='273'>Nuzleaf</option> <option value='274'>Shiftry</option> <option value='275'>Taillow</option> <option value='276'>Swellow</option> <option value='277'>Wingull</option> <option value='278'>Pelipper</option> <option value='279'>Ralts</option> <option value='280'>Kirlia</option> <option value='281'>Gardevoir</option> <option value='282'>Surskit</option> <option value='283'>Masquerain</option> <option value='284'>Shroomish</option> <option value='285'>Breloom</option> <option value='286'>Slakoth</option> <option value='287'>Vigoroth</option> <option value='288'>Slaking</option> <option value='289'>Nincada</option> <option value='290'>Ninjask</option> <option value='291'>Shedinja</option> <option value='292'>Whismur</option> <option value='293'>Loudred</option> <option value='294'>Exploud</option> <option value='295'>Makuhita</option> <option value='296'>Hariyama</option> <option value='297'>Azurill</option> <option value='298'>Nosepass</option> <option value='299'>Skitty</option> <option value='300'>Delcatty</option> <option value='301'>Sableye</option> <option value='302'>Mawile</option> <option value='303'>Aron</option> <option value='304'>Lairon</option> <option value='305'>Aggron</option> <option value='306'>Meditite</option> <option value='307'>Medicham</option> <option value='308'>Electrike</option> <option value='309'>Manectric</option> <option value='310'>Plusle</option> <option value='311'>Minun</option> <option value='312'>Volbeat</option> <option value='313'>Illumise</option> <option value='314'>Roselia</option> <option value='315'>Gulpin</option> <option value='316'>Swalot</option> <option value='317'>Carvanha</option> <option value='318'>Sharpedo</option> <option value='319'>Wailmer</option> <option value='320'>Wailord</option> <option value='321'>Numel</option> <option value='322'>Camerupt</option> <option value='323'>Torkoal</option> <option value='324'>Spoink</option> <option value='325'>Grumpig</option> <option value='326'>Spinda</option> <option value='327'>Trapinch</option> <option value='328'>Vibrava</option> <option value='329'>Flygon</option> <option value='330'>Cacnea</option> <option value='331'>Cacturne</option> <option value='332'>Swablu</option> <option value='333'>Altaria</option> <option value='334'>Zangoose</option> <option value='335'>Seviper</option> <option value='336'>Lunatone</option> <option value='337'>Solrock</option> <option value='338'>Barboach</option> <option value='339'>Whiscash</option> <option value='340'>Corphish</option> <option value='341'>Crawdaunt</option> <option value='342'>Baltoy</option> <option value='343'>Claydol</option> <option value='344'>Lileep</option> <option value='345'>Cradily</option> <option value='346'>Anorith</option> <option value='347'>Armaldo</option> <option value='348'>Feebas</option> <option value='349'>Milotic</option> <option value='350'>Castform</option> <option value='351'>Kecleon</option> <option value='352'>Shuppet</option> <option value='353'>Banette</option> <option value='354'>Duskull</option> <option value='355'>Dusclops</option> <option value='356'>Tropius</option> <option value='357'>Chimecho</option> <option value='358'>Absol</option> <option value='359'>Wynaut</option> <option value='360'>Snorunt</option> <option value='361'>Glalie</option> <option value='362'>Spheal</option> <option value='363'>Sealeo</option> <option value='364'>Walrein</option> <option value='365'>Clamperl</option> <option value='366'>Huntail</option> <option value='367'>Gorebyss</option> <option value='368'>Relicanth</option> <option value='369'>Luvdisc</option> <option value='370'>Bagon</option> <option value='371'>Shelgon</option> <option value='372'>Salamence</option> <option value='373'>Beldum</option> <option value='374'>Metang</option> <option value='375'>Metagross</option> <option value='376'>Regirock</option> <option value='377'>Regice</option> <option value='378'>Registeel</option> <option value='379'>Latias</option> <option value='380'>Latios</option> <option value='381'>Kyogre</option> <option value='382'>Groudon</option> <option value='383'>Rayquaza</option> <option value='384'>Jirachi</option> <option value='385'>Deoxys</option> <option value='386'>Turtwig</option> <option value='387'>Grotle</option> <option value='388'>Torterra</option> <option value='389'>Chimchar</option> <option value='390'>Monferno</option> <option value='391'>Infernape</option> <option value='392'>Piplup</option> <option value='393'>Prinplup</option> <option value='394'>Empoleon</option> <option value='395'>Starly</option> <option value='396'>Staravia</option> <option value='397'>Staraptor</option> <option value='398'>Bidoof</option> <option value='399'>Bibarel</option> <option value='400'>Kricketot</option> <option value='401'>Kricketune</option> <option value='402'>Shinx</option> <option value='403'>Luxio</option> <option value='404'>Luxray</option> <option value='40'>Budew</option> <option value='40'>Roserade</option> <option value='40'>Cranidos</option> <option value='40'>Rampardos</option> <option value='409'>Shieldon</option> <option value='410'>Bastiodon</option> <option value='411'>Burmy</option> <option value='412'>Wormadam</option> <option value='413'>Mothim</option> <option value='414'>Combee</option> <option value='415'>Vespiquen</option> <option value='416'>Pachirisu</option> <option value='417'>Buizel</option> <option value='418'>Floatzel</option> <option value='419'>Cherubi</option> <option value='420'>Cherrim</option> <option value='421'>Shellos</option> <option value='422'>Gastrodon</option> <option value='423'>Ambipom</option> <option value='424'>Drifloon</option> <option value='425'>Drifblim</option> <option value='426'>Buneary</option> <option value='427'>Lopunny</option> <option value='428'>Mismagius</option> <option value='429'>Honchkrow</option> <option value='430'>Glameow</option> <option value='431'>Purugly</option> <option value='432'>Chingling</option> <option value='433'>Stunky</option> <option value='434'>Skuntank</option> <option value='435'>Bronzor</option> <option value='436'>Bronzong</option> <option value='437'>Bonsly</option> <option value='438'>Mime Jr.</option> <option value='439'>Happiny</option> <option value='440'>Chatot</option> <option value='441'>Spiritomb</option> <option value='442'>Gible</option> <option value='443'>Gabite</option> <option value='444'>Garchomp</option> <option value='445'>Munchlax</option> <option value='446'>Riolu</option> <option value='447'>Lucario</option> <option value='448'>Hippopotas</option> <option value='449'>Hippowdon</option> <option value='450'>Skorupi</option> <option value='451'>Drapion</option> <option value='452'>Croagunk</option> <option value='453'>Toxicroak</option> <option value='454'>Carnivine</option> <option value='455'>Finneon</option> <option value='456'>Lumineon</option> <option value='457'>Mantyke</option> <option value='458'>Snover</option> <option value='459'>Abomasnow</option> <option value='460'>Weavile</option> <option value='461'>Magnezone</option> <option value='462'>Lickilicky</option> <option value='463'>Rhyperior</option> <option value='464'>Tangrowth</option> <option value='465'>Electivire</option> <option value='466'>Magmortar</option> <option value='467'>Togekiss</option> <option value='468'>Yanmega</option> <option value='469'>Leafeon</option> <option value='470'>Glaceon</option> <option value='471'>Gliscor</option> <option value='472'>Mamoswine</option> <option value='473'>Porygon-Z</option> <option value='474'>Gallade</option> <option value='475'>Probopass</option> <option value='476'>Dusknoir</option> <option value='477'>Froslass</option> <option value='478'>Rotom</option> <option value='479'>Uxie</option> <option value='480'>Mesprit</option> <option value='481'>Azelf</option> <option value='482'>Dialga</option> <option value='483'>Palkia</option> <option value='484'>Heatran</option> <option value='485'>Regigigas</option> <option value='486'>Giratina</option> <option value='487'>Cresselia</option> <option value='488'>Phione</option> <option value='489'>Manaphy</option> <option value='490'>Darkrai</option> <option value='491'>Shaymin</option> <option value='492'>Arceus</option> <option value='493'>Victini</option> <option value='494'>Snivy</option> <option value='495'>Servine</option> <option value='496'>Serperior</option> <option value='497'>Tepig</option> <option value='498'>Pignite</option> <option value='499'>Emboar</option> <option value='500'>Oshawott</option> <option value='501'>Dewott</option> <option value='502'>Samurott</option> <option value='503'>Patrat</option> <option value='504'>Watchog</option> <option value='505'>Lillipup</option> <option value='506'>Herdier</option> <option value='507'>Stoutland</option> <option value='508'>Purrloin</option> <option value='509'>Liepard</option> <option value='510'>Pansage</option> <option value='511'>Simisage</option> <option value='512'>Pansear</option> <option value='513'>Simisear</option> <option value='514'>Panpour</option> <option value='515'>Simipour</option> <option value='516'>Munna</option> <option value='517'>Musharna</option> <option value='518'>Pidove</option> <option value='519'>Tranquill</option> <option value='520'>Unfezant</option> <option value='521'>Blitzle</option> <option value='522'>Zebstrika</option> <option value='523'>Roggenrola</option> <option value='524'>Boldore</option> <option value='525'>Gigalith</option> <option value='526'>Woobat</option> <option value='527'>Swoobat</option> <option value='528'>Drilbur</option> <option value='529'>Excadrill</option> <option value='530'>Audino</option> <option value='531'>Timburr</option> <option value='532'>Gurdurr</option> <option value='533'>Conkeldurr</option> <option value='534'>Tympole</option> <option value='535'>Palpitoad</option> <option value='536'>Seismitoad</option> <option value='537'>Throh</option> <option value='538'>Sawk</option> <option value='539'>Sewaddle</option> <option value='540'>Swadloon</option> <option value='541'>Leavanny</option> <option value='542'>Venipede</option> <option value='543'>Whirlipede</option> <option value='544'>Scolipede</option> <option value='545'>Cottonee</option> <option value='546'>Whimsicott</option> <option value='547'>Petilil</option> <option value='548'>Lilligant</option> <option value='549'>Basculin</option> <option value='550'>Sandile</option> <option value='551'>Krokorok</option> <option value='552'>Krookodile</option> <option value='553'>Darumaka</option> <option value='554'>Darmanitan</option> <option value='555'>Maractus</option> <option value='556'>Dwebble</option> <option value='557'>Crustle</option> <option value='558'>Scraggy</option> <option value='559'>Scrafty</option> <option value='560'>Sigilyph</option> <option value='561'>Yamask</option> <option value='562'>Cofagrigus</option> <option value='563'>Tirtouga</option> <option value='564'>Carracosta</option> <option value='565'>Archen</option> <option value='566'>Archeops</option> <option value='567'>Trubbish</option> <option value='568'>Garbodor</option> <option value='569'>Zorua</option> <option value='570'>Zoroark</option> <option value='571'>Minccino</option> <option value='572'>Cinccino</option> <option value='573'>Gothita</option> <option value='574'>Gothorita</option> <option value='575'>Gothitelle</option> <option value='576'>Solosis</option> <option value='577'>Duosion</option> <option value='578'>Reuniclus</option> <option value='579'>Ducklett</option> <option value='580'>Swanna</option> <option value='581'>Vanillite</option> <option value='582'>Vanillish</option> <option value='583'>Vanilluxe</option> <option value='584'>Deerling</option> <option value='585'>Sawsbuck</option> <option value='586'>Emolga</option> <option value='587'>Karrablast</option> <option value='588'>Escavalier</option> <option value='589'>Foongus</option> <option value='590'>Amoonguss</option> <option value='591'>Frillish</option> <option value='592'>Jellicent</option> <option value='593'>Alomomola</option> <option value='594'>Joltik</option> <option value='595'>Galvantula</option> <option value='596'>Ferroseed</option> <option value='597'>Ferrothorn</option> <option value='598'>Klink</option> <option value='599'>Klang</option> <option value='600'>Klinklang</option> <option value='601'>Tynamo</option> <option value='602'>Eelektrik</option> <option value='603'>Eelektross</option> <option value='604'>Elgyem</option> <option value='605'>Beheeyem</option> <option value='606'>Litwick</option> <option value='607'>Lampent</option> <option value='608'>Chandelure</option> <option value='609'>Axew</option> <option value='610'>Fraxure</option> <option value='611'>Haxorus</option> <option value='612'>Cubchoo</option> <option value='613'>Beartic</option> <option value='614'>Cryogonal</option> <option value='615'>Shelmet</option> <option value='616'>Accelgor</option> <option value='617'>Stunfisk</option> <option value='618'>Mienfoo</option> <option value='619'>Mienshao</option> <option value='620'>Druddigon</option> <option value='621'>Golett</option> <option value='622'>Golurk</option> <option value='623'>Pawniard</option> <option value='624'>Bisharp</option> <option value='625'>Bouffalant</option> <option value='626'>Rufflet</option> <option value='627'>Braviary</option> <option value='628'>Vullaby</option> <option value='629'>Mandibuzz</option> <option value='630'>Heatmor</option> <option value='631'>Durant</option> <option value='632'>Deino</option> <option value='633'>Zweilous</option> <option value='634'>Hydreigon</option> <option value='635'>Larvesta</option> <option value='636'>Volcarona</option> <option value='637'>Cobalion</option> <option value='638'>Terrakion</option> <option value='639'>Virizion</option> <option value='640'>Tornadus</option> <option value='641'>Thundurus</option> <option value='642'>Reshiram</option> <option value='643'>Zekrom</option> <option value='644'>Landorus</option> <option value='645'>Kyurem</option> <option value='646'>Keldeo</option> <option value='647'>Meloetta</option> <option value='648'>Genesect</option> </select>";
+		}
+}
+const Background = "img/bounty_template.png";
+const extraBackground = ["img/BattleBackgroundNone.png",
+"img/BattleBackground0.png",
+"img/BattleBackground1.png",
+"img/BattleBackground2.png",
+"img/BattleBackground3.png",
+"img/BattleBackground4.png",
+"img/BattleBackground5.png",
+"img/BattleBackground6.png",
+"img/BattleBackground7.png",
+"img/BattleBackground8.png",
+"img/BattleBackground9.png"];
+var rewardAmount = 500000;
+var extraBackgroundImage = extraBackground[0];
+var PokemonSelection1 = "https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_001.png";
+var PokemonSelection2 = "https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_001.png";
+var PokemonSelection3 = "https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_001.png";
+var PokemonSelection4 = "https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_001.png";
+var PokemonSelection5 = "https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_001.png";
+var PokemonSelection6 = "https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_001.png";
+function changeBackground(){
+	var extraBackgroundNr = document.getElementById("Background").value;
+	extraBackgroundImage = extraBackground[extraBackgroundNr];
+}
+function changePokemonAmount(){
+	pokemonAmount = document.getElementById("PokemonAmount").value;
+	refreshAmountOnPage();
+}
+function changePokemon() {
+	var PokemonNr1 = document.getElementById('Pokemon1').value;
+	PokemonSelection1 = Pokemon[PokemonNr1];
+	if (pokemonAmount==2){
+		var PokemonNr2 = document.getElementById('Pokemon2').value;
+		PokemonSelection2 = Pokemon[PokemonNr2];
+	} else if (pokemonAmount==3){
+		var PokemonNr2 = document.getElementById('Pokemon2').value;
+		PokemonSelection2 = Pokemon[PokemonNr2];
+		var PokemonNr3 = document.getElementById('Pokemon3').value;
+		PokemonSelection3 = Pokemon[PokemonNr3];
+	} else if (pokemonAmount==4){
+		var PokemonNr2 = document.getElementById('Pokemon2').value;
+		PokemonSelection2 = Pokemon[PokemonNr2];
+		var PokemonNr3 = document.getElementById('Pokemon3').value;
+		PokemonSelection3 = Pokemon[PokemonNr3];
+		var PokemonNr4 = document.getElementById('Pokemon4').value;
+		PokemonSelection4 = Pokemon[PokemonNr4];
+	} else if (pokemonAmount==5){
+		var PokemonNr2 = document.getElementById('Pokemon2').value;
+		PokemonSelection2 = Pokemon[PokemonNr2];
+		var PokemonNr3 = document.getElementById('Pokemon3').value;
+		PokemonSelection3 = Pokemon[PokemonNr3];
+		var PokemonNr4 = document.getElementById('Pokemon4').value;
+		PokemonSelection4 = Pokemon[PokemonNr4];
+		var PokemonNr5 = document.getElementById('Pokemon5').value;
+		PokemonSelection5 = Pokemon[PokemonNr5];
+	} else if (pokemonAmount==6){
+		var PokemonNr2 = document.getElementById('Pokemon2').value;
+		PokemonSelection2 = Pokemon[PokemonNr2];
+		var PokemonNr3 = document.getElementById('Pokemon3').value;
+		PokemonSelection3 = Pokemon[PokemonNr3];
+		var PokemonNr4 = document.getElementById('Pokemon4').value;
+		PokemonSelection4 = Pokemon[PokemonNr4];
+		var PokemonNr5 = document.getElementById('Pokemon5').value;
+		PokemonSelection5 = Pokemon[PokemonNr5];
+		var PokemonNr6 = document.getElementById('Pokemon6').value;
+		PokemonSelection6 = Pokemon[PokemonNr6];
+	}
+}
+var titleText = "";
+var titleFontSize = "48";
+var descriptionText = "";
+var descriptionFontSize = "16";
+var descriptionText2 = "";
+var descriptionFontSize2 = "16";
+var descriptionText3 = "";
+var descriptionFontSize3 = "16";
+function drawImage() {
+	rewardAmount = document.getElementById("BountyAmount").value;
+	titleText = document.getElementById("TitleText").value;
+	titleFontSize = document.getElementById("TitleFontSize").value;
+	descriptionText = document.getElementById("DescriptionText").value;
+	descriptionFontSize = document.getElementById("DescriptionFontSize").value;
+	descriptionText2 = document.getElementById("DescriptionText2").value;
+	descriptionFontSize2 = document.getElementById("DescriptionFontSize2").value;
+	descriptionText3 = document.getElementById("DescriptionText3").value;
+	descriptionFontSize3 = document.getElementById("DescriptionFontSize3").value;
+  var ctx = document.getElementById('canvas').getContext('2d');
+  var backgroundImg = new Image();
+  var backgroundExtraImg = new Image();
+  var pokemon1 = new Image();
+  var pokemon2 = new Image();
+  var pokemon3 = new Image();
+  var pokemon4 = new Image();
+  var pokemon5 = new Image();
+  var pokemon6 = new Image();
+  backgroundImg.src = Background;
+  backgroundExtraImg.src = extraBackgroundImage;
+  pokemon1.onload = function() {
+  	ctx.drawImage(backgroundImg, 0, 0);
+  	ctx.drawImage(backgroundExtraImg, 52, 300, 400, 200);
+  	if (pokemonAmount==1){
+    ctx.drawImage(pokemon1, 155, 245, 200, 200);
+    } else if (pokemonAmount==2){
+    ctx.drawImage(pokemon1, 75, 245, 200, 200);
+    ctx.drawImage(pokemon2, 235, 245, 200, 200);    
+    } else if (pokemonAmount==3){
+    ctx.drawImage(pokemon1, 55, 280, 150, 150);
+    ctx.drawImage(pokemon2, 180, 280, 150, 150);    
+    ctx.drawImage(pokemon3, 305, 280, 150, 150);    
+    } else if (pokemonAmount==4){
+    ctx.drawImage(pokemon1, 80, 300, 120, 120);
+    ctx.drawImage(pokemon2, 295, 290, 120, 120);    
+    ctx.drawImage(pokemon3, 133, 330, 120, 120);
+    ctx.drawImage(pokemon4, 245, 332, 120, 120);    
+    } else if (pokemonAmount==5){
+    ctx.drawImage(pokemon1, 80, 300, 120, 120);
+    ctx.drawImage(pokemon2, 185, 290, 120, 120);    
+    ctx.drawImage(pokemon3, 295, 290, 120, 120);    
+    ctx.drawImage(pokemon4, 133, 330, 120, 120);
+    ctx.drawImage(pokemon5, 245, 332, 120, 120);    
+    } else if (pokemonAmount==6){
+    ctx.drawImage(pokemon1, 80, 300, 120, 120);
+    ctx.drawImage(pokemon2, 185, 290, 120, 120);    
+    ctx.drawImage(pokemon3, 295, 290, 120, 120);    
+    ctx.drawImage(pokemon4, 60, 330, 120, 120);
+    ctx.drawImage(pokemon5, 195, 340, 120, 120);    
+    ctx.drawImage(pokemon6, 325, 330, 120, 120);    
+    }
+	ctx.font = "45px Fantasy";
+	ctx.textAlign = 'center';
+	ctx.strokeText(rewardAmount+"$",252,510);
+	ctx.font = "25px Fantasy";
+	ctx.font = titleFontSize+"px Fantasy";
+	ctx.fillText(titleText, 252, 170);
+	ctx.font = descriptionFontSize+"px Fantasy";
+	ctx.fillText(descriptionText, 252, 190);
+	ctx.font = descriptionFontSize2+"px Fantasy";
+	ctx.fillText(descriptionText2, 252, 220);
+	ctx.font = descriptionFontSize3+"px Fantasy";
+	ctx.fillText(descriptionText3, 252, 250);
+  };
+  pokemon1.src = PokemonSelection1;
+  pokemon2.src = PokemonSelection2;
+  pokemon3.src = PokemonSelection3;
+  pokemon4.src = PokemonSelection4;
+  pokemon5.src = PokemonSelection5;
+  pokemon6.src = PokemonSelection6;
+}
+</script>
