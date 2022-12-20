@@ -1,5 +1,5 @@
 <style>
-canvas {  
+canvas {
   background-color: ivory;
   border: 1px solid lightgray;
 }
@@ -57,8 +57,9 @@ canvas {
 
 <script>
 
-var Pokemon = ["https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_001.png",
-"https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_002.png",
+var Pokemon = [
+"https://raw.githubusercontent.com/PMDCollab/SpriteCollab/master/portrait/0001/Normal.png",
+"https://raw.githubusercontent.com/PMDCollab/SpriteCollab/master/portrait/0002/Normal.png",
 "https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_003_f.png",
 "https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_004.png",
 "https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_shiny/spr_bw-S_005.png",
@@ -710,7 +711,7 @@ var Pokemon = ["https://www.pokencyclopedia.info/sprites/gen5/spr_black-white_sh
 var pokemonAmount = 1;
 refreshAmountOnPage();
 function refreshAmountOnPage(){
-	document.getElementById('PokemonSelectors').innerHTML = "";	
+	document.getElementById('PokemonSelectors').innerHTML = "";
 	var AmountIndex = 0;
 	for (let i = 0; i < pokemonAmount; i++) {
 		AmountIndex = AmountIndex + 1;
@@ -821,29 +822,29 @@ function drawImage() {
     ctx.drawImage(pokemon1, 155, 245, 200, 200);
     } else if (pokemonAmount==2){
     ctx.drawImage(pokemon1, 75, 245, 200, 200);
-    ctx.drawImage(pokemon2, 235, 245, 200, 200);    
+    ctx.drawImage(pokemon2, 235, 245, 200, 200);
     } else if (pokemonAmount==3){
     ctx.drawImage(pokemon1, 55, 280, 150, 150);
-    ctx.drawImage(pokemon2, 180, 280, 150, 150);    
-    ctx.drawImage(pokemon3, 305, 280, 150, 150);    
+    ctx.drawImage(pokemon2, 180, 280, 150, 150);
+    ctx.drawImage(pokemon3, 305, 280, 150, 150);
     } else if (pokemonAmount==4){
     ctx.drawImage(pokemon1, 80, 300, 120, 120);
-    ctx.drawImage(pokemon2, 295, 290, 120, 120);    
+    ctx.drawImage(pokemon2, 295, 290, 120, 120);
     ctx.drawImage(pokemon3, 133, 330, 120, 120);
-    ctx.drawImage(pokemon4, 245, 332, 120, 120);    
+    ctx.drawImage(pokemon4, 245, 332, 120, 120);
     } else if (pokemonAmount==5){
     ctx.drawImage(pokemon1, 80, 300, 120, 120);
-    ctx.drawImage(pokemon2, 185, 290, 120, 120);    
-    ctx.drawImage(pokemon3, 295, 290, 120, 120);    
+    ctx.drawImage(pokemon2, 185, 290, 120, 120);
+    ctx.drawImage(pokemon3, 295, 290, 120, 120);
     ctx.drawImage(pokemon4, 133, 330, 120, 120);
-    ctx.drawImage(pokemon5, 245, 332, 120, 120);    
+    ctx.drawImage(pokemon5, 245, 332, 120, 120);
     } else if (pokemonAmount==6){
     ctx.drawImage(pokemon1, 80, 300, 120, 120);
-    ctx.drawImage(pokemon2, 185, 290, 120, 120);    
-    ctx.drawImage(pokemon3, 295, 290, 120, 120);    
+    ctx.drawImage(pokemon2, 185, 290, 120, 120);
+    ctx.drawImage(pokemon3, 295, 290, 120, 120);
     ctx.drawImage(pokemon4, 60, 330, 120, 120);
-    ctx.drawImage(pokemon5, 195, 340, 120, 120);    
-    ctx.drawImage(pokemon6, 325, 330, 120, 120);    
+    ctx.drawImage(pokemon5, 195, 340, 120, 120);
+    ctx.drawImage(pokemon6, 325, 330, 120, 120);
     }
 	ctx.font = "45px Fantasy";
 	ctx.textAlign = 'center';
