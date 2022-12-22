@@ -838,10 +838,14 @@ function drawImage() {
     ctx.drawImage(pokemon2, 180, 280, 150, 150);
     ctx.drawImage(pokemon3, 305, 280, 150, 150);
     } else if (pokemonAmount==4){
-    ctx.drawImage(pokemon1, 80, 300, 120, 120);
-    ctx.drawImage(pokemon2, 295, 290, 120, 120);
-    ctx.drawImage(pokemon3, 133, 330, 120, 120);
-    ctx.drawImage(pokemon4, 245, 332, 120, 120);
+    ctx.drawImage(posterImg, just4pokemonX, just4pokemonY, 150, 150);
+    ctx.drawImage(pokemon1, just4pokemonX+55, just4pokemonY+60, 44, 44);
+    ctx.drawImage(posterImg, just4pokemonX+210, just4pokemonY, 150, 150);
+    ctx.drawImage(pokemon2, just4pokemonX+265, just4pokemonY+60, 44, 44);
+    ctx.drawImage(posterImg, just4pokemonX2, just4pokemonY2, 150, 150);
+    ctx.drawImage(pokemon1, just4pokemonX2+55, just4pokemonY2+60, 44, 44);
+    ctx.drawImage(posterImg, just4pokemonX2+210, just2pokemonY2, 150, 150);
+    ctx.drawImage(pokemon2, just4pokemonX2+265, just2pokemonY2+60, 44, 44);
     } else if (pokemonAmount==5){
     ctx.drawImage(pokemon1, 80, 300, 120, 120);
     ctx.drawImage(pokemon2, 185, 290, 120, 120);
@@ -863,11 +867,11 @@ function drawImage() {
 	ctx.font = titleFontSize+"px Fantasy";
 	ctx.fillText(titleText, 360, 85);
 	ctx.font = descriptionFontSize+"px Fantasy";
-	ctx.fillText(descriptionText, 360, 190);
+	ctx.fillText(descriptionText, 360, 130);
 	ctx.font = descriptionFontSize2+"px Fantasy";
-	ctx.fillText(descriptionText2, 360, 220);
+	ctx.fillText(descriptionText2, 360, 160);
 	ctx.font = descriptionFontSize3+"px Fantasy";
-	ctx.fillText(descriptionText3, 360, 250);
+	ctx.fillText(descriptionText3, 360, 190);
   };
 
   pokemon1.src = PokemonSelection1;
