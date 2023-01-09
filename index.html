@@ -819,6 +819,8 @@ function drawImage() {
   var only1pokemonY = 205;
   var just2pokemonX = 182;
   var just2pokemonY = 205;
+  var just3pokemonX = 77;
+  var just3pokemonY = 205;
   posterImg.src = Poster;
   backgroundImg.src = Background;
   backgroundExtraImg.src = extraBackgroundImage;
@@ -831,34 +833,48 @@ function drawImage() {
     } else if (pokemonAmount==2){
     ctx.drawImage(posterImg, just2pokemonX, just2pokemonY, 150, 150);
     ctx.drawImage(pokemon1, just2pokemonX+55, just2pokemonY+60, 44, 44);
-    ctx.drawImage(posterImg, just2pokemonX+210, just2pokemonY, 150, 150);
-    ctx.drawImage(pokemon2, just2pokemonX+265, just2pokemonY+60, 44, 44);
+    ctx.drawImage(posterImg, just2pokemonX+210, just2pokemonY+20, 150, 150);
+    ctx.drawImage(pokemon2, just2pokemonX+265, just2pokemonY+80, 44, 44);
     } else if (pokemonAmount==3){
-    ctx.drawImage(pokemon1, 55, 280, 150, 150);
-    ctx.drawImage(pokemon2, 180, 280, 150, 150);
-    ctx.drawImage(pokemon3, 305, 280, 150, 150);
+    ctx.drawImage(posterImg, just3pokemonX+55, just2pokemonY-5, 150, 150);
+    ctx.drawImage(pokemon1, just3pokemonX+110, just3pokemonY+55, 44, 44);
+    ctx.drawImage(posterImg, just3pokemonX+210, just3pokemonY+20, 150, 150);
+    ctx.drawImage(pokemon2, just3pokemonX+265, just3pokemonY+80, 44, 44);
+    ctx.drawImage(posterImg, just3pokemonX+365, just3pokemonY, 150, 150);
+    ctx.drawImage(pokemon3, just3pokemonX+420, just3pokemonY+60, 44, 44);
     } else if (pokemonAmount==4){
-    ctx.drawImage(posterImg, just4pokemonX, just4pokemonY, 150, 150);
-    ctx.drawImage(pokemon1, just4pokemonX+55, just4pokemonY+60, 44, 44);
-    ctx.drawImage(posterImg, just4pokemonX+210, just4pokemonY, 150, 150);
-    ctx.drawImage(pokemon2, just4pokemonX+265, just4pokemonY+60, 44, 44);
-    ctx.drawImage(posterImg, just4pokemonX2, just4pokemonY2, 150, 150);
-    ctx.drawImage(pokemon1, just4pokemonX2+55, just4pokemonY2+60, 44, 44);
-    ctx.drawImage(posterImg, just4pokemonX2+210, just2pokemonY2, 150, 150);
-    ctx.drawImage(pokemon2, just4pokemonX2+265, just2pokemonY2+60, 44, 44);
+    ctx.drawImage(posterImg, just2pokemonX, just2pokemonY, 150, 150);
+    ctx.drawImage(pokemon1, just2pokemonX+55, just2pokemonY+60, 44, 44);
+    ctx.drawImage(posterImg, just2pokemonX+210+15, just2pokemonY+20+85, 150, 150);
+    ctx.drawImage(pokemon4, just2pokemonX+265+15, just2pokemonY+80+85, 44, 44);
+    ctx.drawImage(posterImg, just2pokemonX+210, just2pokemonY+20, 150, 150);
+    ctx.drawImage(pokemon2, just2pokemonX+265, just2pokemonY+80, 44, 44);
+    ctx.drawImage(posterImg, just2pokemonX+15, just2pokemonY+105, 150, 150);
+    ctx.drawImage(pokemon3, just2pokemonX+55+15, just2pokemonY+60+105, 44, 44);
     } else if (pokemonAmount==5){
-    ctx.drawImage(pokemon1, 80, 300, 120, 120);
-    ctx.drawImage(pokemon2, 185, 290, 120, 120);
-    ctx.drawImage(pokemon3, 295, 290, 120, 120);
-    ctx.drawImage(pokemon4, 133, 330, 120, 120);
-    ctx.drawImage(pokemon5, 245, 332, 120, 120);
+    ctx.drawImage(posterImg, just2pokemonX, just2pokemonY, 150, 150);
+    ctx.drawImage(pokemon1, just2pokemonX+55, just2pokemonY+60, 44, 44);
+    ctx.drawImage(posterImg, just2pokemonX+210+15, just2pokemonY+20+85, 150, 150);
+    ctx.drawImage(pokemon4, just2pokemonX+265+15, just2pokemonY+80+85, 44, 44);
+    ctx.drawImage(posterImg, just2pokemonX+210, just2pokemonY+20-10, 150, 150);
+    ctx.drawImage(pokemon2, just2pokemonX+265, just2pokemonY+80-10, 44, 44);
+    ctx.drawImage(posterImg, just2pokemonX+15, just2pokemonY+105, 150, 150);
+    ctx.drawImage(pokemon3, just2pokemonX+55+15, just2pokemonY+60+105, 44, 44);
+    ctx.drawImage(posterImg, just3pokemonX+210, just3pokemonY+20, 150, 150);
+    ctx.drawImage(pokemon5, just3pokemonX+265, just3pokemonY+80, 44, 44);
     } else if (pokemonAmount==6){
-    ctx.drawImage(pokemon1, 80, 300, 120, 120);
-    ctx.drawImage(pokemon2, 185, 290, 120, 120);
-    ctx.drawImage(pokemon3, 295, 290, 120, 120);
-    ctx.drawImage(pokemon4, 60, 330, 120, 120);
-    ctx.drawImage(pokemon5, 195, 340, 120, 120);
-    ctx.drawImage(pokemon6, 325, 330, 120, 120);
+    ctx.drawImage(posterImg, just3pokemonX+55, just2pokemonY-5, 150, 150);
+    ctx.drawImage(pokemon1, just3pokemonX+110, just3pokemonY+55, 44, 44);
+    ctx.drawImage(posterImg, just3pokemonX+210, just3pokemonY+2, 150, 150);
+    ctx.drawImage(pokemon2, just3pokemonX+265, just3pokemonY+62, 44, 44);
+    ctx.drawImage(posterImg, just3pokemonX+365, just3pokemonY, 150, 150);
+    ctx.drawImage(pokemon3, just3pokemonX+420, just3pokemonY+60, 44, 44);
+    ctx.drawImage(posterImg, just3pokemonX+60, just2pokemonY-5+110, 150, 150);
+    ctx.drawImage(pokemon4, just3pokemonX+115, just3pokemonY+55+110, 44, 44);
+    ctx.drawImage(posterImg, just3pokemonX+215, just3pokemonY+20+80, 150, 150);
+    ctx.drawImage(pokemon5, just3pokemonX+270, just3pokemonY+80+80, 44, 44);
+    ctx.drawImage(posterImg, just3pokemonX+365, just3pokemonY+105, 150, 150);
+    ctx.drawImage(pokemon6, just3pokemonX+420, just3pokemonY+60+105, 44, 44);
     }
 	ctx.font = "45px Fantasy";
 	ctx.textAlign = 'center';
